@@ -1,6 +1,3 @@
-#include <dirent.h>
-#include <sys/stat.h>
-#include <stdio.h>
 #include "libft.h"
 
 typedef struct			s_dir
@@ -109,18 +106,3 @@ char change_one_right(mode_t temp, char letter)
 
 
 //chmod_print(((dir->buffer)->st_mode))
-
-int main()
-{
-	t_dir *dir;
-	size_t c;
-	dir = read_dir(".", 1, &c);
-
-	while (c)
-	{
-		printf("%s, %s\n", chmod_print(((dir->buffer)->st_mode)), (char *)((dir->file)->d_name));
-		dir++;
-		c--;
-	}
-	return 0;
-}
