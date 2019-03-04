@@ -77,6 +77,48 @@ t_dir *read_dir(char *path, int stat_indicate, size_t *count)
 	return (tdir_lst_to_arr(lst, counter));
 }
 
+char change_one_right(mode_t temp, char letter)
+{
+	if (temp)
+		return (letter);
+	return ('-');
+}
+
+// char *chmod_print(mode_t rights)
+// {
+// 	char *result;
+// 	mode_t temp;
+//
+	// if (!(result = (char *)malloc(10)))
+	// 	return (NULL);
+// 	result[9] = '\0';
+// 	result[0] = change_one_right((rights << 8), 'r');
+// 	result[1] = change_one_right((rights << 7) >> 8, 'w');
+// 	result[2] = change_one_right((rights << 6) >> 8, 'x');
+// 	result[3] = change_one_right((rights << 5) >> 8, 'r');
+// 	result[4] = change_one_right((rights << 4) >> 8, 'w');
+// 	result[5] = change_one_right((rights << 3) >> 8, 'x');
+// 	result[6] = change_one_right((rights << 2) >> 8, 'r');
+// 	result[7] = change_one_right((rights << 1) >> 8, 'w');
+// 	result[8] = change_one_right(rights, 'x');
+// 	return (result);
+// }
+
+char *chmod_print(mode_t rights)
+{
+	char *result;
+  const char chars[] = "rwxrwxrwx";
+		if (!(result = (char *)malloc(10)))
+			return (NULL);
+  for (size_t i = 0; i < 9; i++) {
+    result[i] = (rights & (1 << (8-i))) ? chars[i] : '-';
+  }
+  result[9] = '\0';
+		return (result);
+}
+
+//chmod_print(((dir->buffer)->st_mode))
+
 int main()
 {
 	t_dir *dir;
@@ -85,7 +127,7 @@ int main()
 
 	while (c)
 	{
-		printf("%s\n", (char *)((dir->file)->d_name));
+		printf("%d, %s\n", (int)(dir->buffer)->st_mode, (char *)((dir->file)->d_name));
 		dir++;
 		c--;
 	}
