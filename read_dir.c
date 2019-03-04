@@ -9,18 +9,19 @@ typedef struct			s_dir
 	struct stat *buffer;
 }						t_dir;
 
-
-
-t_dir *struct_tdir_copy(t_dir current)
+char *chmod_print(mode_t rights)
 {
-	t_dir *result;
-
-	if (!(result = (t_dir *)malloc(sizeof(t_dir))))
-		return (NULL);
-	result->file = current.file;
-	result->buffer = current.buffer;
-	return (result);
+	char *result;
+  const char chars[] = "rwxrwxrwx";
+		if (!(result = (char *)malloc(10)))
+			return (NULL);
+  for (size_t i = 0; i < 9; i++) {
+    result[i] = (rights & (1 << (8-i))) ? chars[i] : '-';
+  }
+  result[9] = '\0';
+		return (result);
 }
+
 t_dir *tdir_lst_to_arr(t_list *lst, size_t count)
 {
 	t_dir *arr;
@@ -40,6 +41,7 @@ t_dir *tdir_lst_to_arr(t_list *lst, size_t count)
 		index++;
 		lst = lst->next;
 	}
+	// зафришить current.buffer
 	ft_lst_free_chain(temp);
 	return (arr);
 }
@@ -60,6 +62,7 @@ t_dir *read_dir(char *path, int stat_indicate, size_t *count)
 	while ((current_elem = readdir(dir)))
 	{
 		current.file = current_elem;
+		current.buffer = (struct stat*)malloc(sizeof(struct stat));
 		if (stat_indicate)
 		{
 			path_and_slash = ft_strjoin(path, "/");
@@ -69,7 +72,6 @@ t_dir *read_dir(char *path, int stat_indicate, size_t *count)
 			free(path_to_stat);
 		}
 		ft_lstadd_to_end(&lst, ft_lstnew(&current, sizeof(current)));
-		struct_tdir_copy(current);
 		counter++;
 	}
 	closedir(dir);
@@ -104,18 +106,7 @@ char change_one_right(mode_t temp, char letter)
 // 	return (result);
 // }
 
-char *chmod_print(mode_t rights)
-{
-	char *result;
-  const char chars[] = "rwxrwxrwx";
-		if (!(result = (char *)malloc(10)))
-			return (NULL);
-  for (size_t i = 0; i < 9; i++) {
-    result[i] = (rights & (1 << (8-i))) ? chars[i] : '-';
-  }
-  result[9] = '\0';
-		return (result);
-}
+
 
 //chmod_print(((dir->buffer)->st_mode))
 
@@ -127,7 +118,7 @@ int main()
 
 	while (c)
 	{
-		printf("%d, %s\n", (int)(dir->buffer)->st_mode, (char *)((dir->file)->d_name));
+		printf("%s, %s\n", chmod_print(((dir->buffer)->st_mode)), (char *)((dir->file)->d_name));
 		dir++;
 		c--;
 	}
