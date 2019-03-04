@@ -6,7 +6,7 @@
 /*   By: sbearded <sbearded@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/25 21:20:15 by ahalmon-          #+#    #+#             */
-/*   Updated: 2019/03/04 15:25:46 by sbearded         ###   ########.fr       */
+/*   Updated: 2019/03/04 15:30:05 by sbearded         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,12 @@
 # include <dirent.h>
 # include <sys/stat.h>
 # include <stdio.h>
+
+typedef struct			s_dir
+{
+	struct dirent *file;
+	struct stat *buffer;
+}						t_dir;
 
 typedef struct			s_list
 {
@@ -44,6 +50,9 @@ typedef struct			s_iterators
 	int					work;
 	char				*chr;
 }						t_iter;
+
+t_dir 					*read_dir(char *path, int stat_indicate, size_t *count);
+char 					*chmod_print(mode_t rights);
 
 void					ft_binary_lst_strdel(t_two_list **alst);
 void					ft_binary_lstadd(t_two_list **alst, t_two_list *new);

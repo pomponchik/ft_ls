@@ -1,11 +1,5 @@
 #include "libft.h"
 
-typedef struct			s_dir
-{
-	struct dirent *file;
-	struct stat *buffer;
-}						t_dir;
-
 char *chmod_print(mode_t rights)
 {
 	char *result;
