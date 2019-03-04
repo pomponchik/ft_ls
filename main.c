@@ -6,7 +6,7 @@
 /*   By: sbearded <sbearded@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/04 15:26:29 by sbearded          #+#    #+#             */
-/*   Updated: 2019/03/04 17:12:11 by sbearded         ###   ########.fr       */
+/*   Updated: 2019/03/04 19:42:08 by sbearded         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int		main(int argc, char **argv)
 		i = 1 + flags->flags;
 		while (i < argc)
 		{
-			dir = read_dir(argv[i], 1, &c);
+			dir = read_dir(argv[i++], 1, &c);
 			print_names(flags, dir, c);
 		}
 	}
