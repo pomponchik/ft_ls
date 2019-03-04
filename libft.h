@@ -6,7 +6,7 @@
 /*   By: sbearded <sbearded@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/25 21:20:15 by ahalmon-          #+#    #+#             */
-/*   Updated: 2019/03/04 15:30:05 by sbearded         ###   ########.fr       */
+/*   Updated: 2019/03/04 17:12:10 by sbearded         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,20 @@
 # include <dirent.h>
 # include <sys/stat.h>
 # include <stdio.h>
+
+typedef struct			s_flags
+{
+	short int	flags;
+	short int	l;
+	short int	R;
+	short int	a;
+	short int	r;
+	short int	t;
+	short int	u;
+	short int	f;
+	short int	g;
+	short int	d;
+}						t_flags;
 
 typedef struct			s_dir
 {
@@ -50,6 +64,12 @@ typedef struct			s_iterators
 	int					work;
 	char				*chr;
 }						t_iter;
+
+t_flags					*create_flags();
+int						check_flags(char **argv, t_flags *flags);
+
+void					print_names(t_flags *flags, t_dir *dir, size_t c);
+void					print_err_illegal_flag(char *arr);
 
 t_dir 					*read_dir(char *path, int stat_indicate, size_t *count);
 char 					*chmod_print(mode_t rights);
