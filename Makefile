@@ -15,12 +15,14 @@ NAME =	ft_ls
 SRC =	read_dir.c \
 		print.c \
 		flags.c \
-		main.c
+		main.c \
+		print_time.c
 
 OBJ =	read_dir.o \
 		print.o \
 		flags.o \
-		main.o
+		main.o \
+		print_time.o
 
 WFLAGS = -Wall -Wextra -Werror
 
