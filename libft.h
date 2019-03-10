@@ -6,7 +6,7 @@
 /*   By: sbearded <sbearded@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/25 21:20:15 by ahalmon-          #+#    #+#             */
-/*   Updated: 2019/03/04 17:12:10 by sbearded         ###   ########.fr       */
+/*   Updated: 2019/03/06 01:48:15 by sbearded         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <dirent.h>
 # include <sys/stat.h>
 # include <stdio.h>
+#include <sys/ioctl.h>
 
 typedef struct			s_flags
 {
