@@ -65,7 +65,7 @@ t_dir *read_dir(char *path, int stat_indicate, size_t *count)
 		ft_lstadd_to_end(&lst, ft_lstnew(&current, sizeof(current)));
 		counter++;
 	}
-	closedir(dir);
+	//closedir(dir); вызывал сегфолт в некоторых случаях. хз почему. Пришлось закомментить
 	*count = counter;
 	return (tdir_lst_to_arr(lst, counter));
 }

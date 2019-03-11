@@ -6,7 +6,7 @@
 /*   By: sbearded <sbearded@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/25 21:20:15 by ahalmon-          #+#    #+#             */
-/*   Updated: 2019/03/06 01:48:15 by sbearded         ###   ########.fr       */
+/*   Updated: 2019/03/11 06:02:09 by sbearded         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,9 @@
 # include <dirent.h>
 # include <sys/stat.h>
 # include <stdio.h>
-#include <sys/ioctl.h>
+# include <sys/ioctl.h>
+
+# define SIZE_TABS 8
 
 typedef struct			s_flags
 {
@@ -37,10 +39,19 @@ typedef struct			s_flags
 	short int	d;
 }						t_flags;
 
+typedef struct			s_print_col
+{
+	int tab_size;
+	int	rows;
+	int	col;
+	int	empty;
+}						t_print_col;
+
 typedef struct			s_dir
 {
-	struct dirent *file;
-	struct stat *buffer;
+	struct dirent		*file;
+	struct stat			*buffer;
+	unsigned int		count;
 }						t_dir;
 
 typedef struct			s_list

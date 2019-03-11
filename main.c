@@ -6,7 +6,7 @@
 /*   By: sbearded <sbearded@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/04 15:26:29 by sbearded          #+#    #+#             */
-/*   Updated: 2019/03/06 03:13:13 by sbearded         ###   ########.fr       */
+/*   Updated: 2019/03/11 06:03:22 by sbearded         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	print_flags(t_flags *flags)
 
 int		main(int argc, char **argv)
 {
-	/*t_dir	*dir;
+	t_dir	*dir;
 	t_flags	*flags;
 	int		i;
 	size_t	c;
@@ -54,5 +54,6 @@ int		main(int argc, char **argv)
 			print_names(flags, dir, c);
 		}
 	}
-	return (0);*/
+	free(flags);
+	return (0);
 }
