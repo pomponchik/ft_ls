@@ -6,7 +6,7 @@
 #    By: sbearded <sbearded@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/02/03 03:51:55 by sbearded          #+#    #+#              #
-#    Updated: 2019/03/04 16:24:53 by sbearded         ###   ########.fr        #
+#    Updated: 2019/03/13 23:27:17 by sbearded         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,13 +16,15 @@ SRC =	read_dir.c \
 		print.c \
 		flags.c \
 		main.c \
-		print_time.c
+		print_time.c \
+		stack.c
 
 OBJ =	read_dir.o \
 		print.o \
 		flags.o \
 		main.o \
-		print_time.o
+		print_time.o \
+		stack.o
 
 WFLAGS = -Wall -Wextra -Werror
 

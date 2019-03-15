@@ -6,7 +6,7 @@
 /*   By: sbearded <sbearded@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/25 21:20:15 by ahalmon-          #+#    #+#             */
-/*   Updated: 2019/03/11 06:02:09 by sbearded         ###   ########.fr       */
+/*   Updated: 2019/03/13 23:51:48 by sbearded         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,10 @@ int						check_flags(char **argv, t_flags *flags);
 
 void					print_names(t_flags *flags, t_dir *dir, size_t c);
 void					print_err_illegal_flag(char *arr);
+
+void					ft_lstdelcontent(void *c, size_t c_size);
+void					stack_push(t_list **stack, t_list *lst);
+t_list					*stack_pop(t_list **stack);
 
 t_dir 					*read_dir(char *path, int stat_indicate, size_t *count);
 char 					*chmod_print(mode_t rights);

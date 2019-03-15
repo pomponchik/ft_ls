@@ -58,7 +58,7 @@ t_dir *read_dir(char *path, int stat_indicate, size_t *count)
 		{
 			path_and_slash = ft_strjoin(path, "/");
 			path_to_stat = ft_strjoin(path_and_slash, current_elem->d_name);
-			stat(path_to_stat, current.buffer);
+			lstat(path_to_stat, current.buffer);
 			free(path_and_slash);
 			free(path_to_stat);
 		}

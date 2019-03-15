@@ -6,7 +6,7 @@
 /*   By: sbearded <sbearded@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/04 15:26:29 by sbearded          #+#    #+#             */
-/*   Updated: 2019/03/11 06:03:22 by sbearded         ###   ########.fr       */
+/*   Updated: 2019/03/15 22:41:39 by sbearded         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ int		main(int argc, char **argv)
 	int		i;
 	size_t	c;
 
+	//sort_argv() - надо отсортировать argv
 	flags = create_flags();
 	if (check_flags(argv, flags) == 0)
 		return (0);

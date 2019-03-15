@@ -6,7 +6,7 @@
 /*   By: sbearded <sbearded@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/04 15:26:24 by sbearded          #+#    #+#             */
-/*   Updated: 2019/03/11 06:05:19 by sbearded         ###   ########.fr       */
+/*   Updated: 2019/03/15 23:19:06 by sbearded         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,94 @@ size_t				ft_putstr_fix(char *c)
 	return (i);
 }
 
+static void	print_SST(mode_t stat, char *arr)
+{
+	if (stat & S_ISVTX)
+	{
+		if (arr[8] == '-')
+			arr[8] = 'T';
+		else
+			arr[8] = 't';
+	}
+	if (stat & S_ISGID)
+	{
+		if (arr[5] == '-')
+			arr[5] = 'S';
+		else
+			arr[5] = 's';
+	}
+	if (stat & S_ISUID)
+	{
+		if (arr[2] == '-')
+			arr[2] = 'S';
+		else
+			arr[2] = 's';
+	}
+}
+
+static void	print_permission(mode_t stat)
+{
+	char		arr[10];
+	const char	chars[9];
+	size_t		i;
+	int			tmp;
+
+	ft_memcpy((void*)chars, "rwxrwxrwx", 9);
+	i = 0;
+	tmp = 256;
+	while (tmp)
+	{
+		if (stat & tmp)
+			arr[i] = chars[i];
+		else
+			arr[i] = '-';
+		i++;
+		tmp >>= 1;
+	}
+	print_SST(stat, arr);
+	ft_putstr(arr);
+	write(1, "  ", 2);
+}
+
+static void	print_ftype(mode_t stat)
+{
+	//printf("%#07O\n", stat);
+	if (stat & S_IFREG)
+	{
+		if (stat & S_IFLNK)
+			ft_putchar('l');
+		else if (stat & S_IFSOCK)
+			ft_putchar('s');
+		else
+			ft_putchar('-');
+	}
+	else
+	{
+		if ((stat & S_IFBLK) == S_IFBLK)
+			ft_putchar('b');
+		else if (stat & S_IFDIR)
+			ft_putchar('d');
+		else if (stat & S_IFCHR)
+			ft_putchar('c');
+		else if (stat & S_IFIFO)
+			ft_putchar('p');
+	}
+}
+
+static void	print_rows(t_dir *dir, size_t c)
+{
+	while (c--)
+	{
+		print_ftype(dir->buffer->st_mode);
+		print_permission(dir->buffer->st_mode);
+		ft_putnbr(dir->buffer->st_nlink);
+		ft_putchar(' ');
+		ft_putstr(dir->file->d_name);
+		ft_putchar('\n');
+		dir++;
+	}
+}
+
 static void	print_colomns(t_dir *dir, size_t c)
 {
 	t_print_col	col;
@@ -98,14 +186,25 @@ static void	print_colomns(t_dir *dir, size_t c)
 	}
 }
 
-void	print_names(t_flags *flags, t_dir *dir, size_t c)
-{
-	print_colomns(dir, c);
-}
-
 void	print_err_illegal_flag(char *arr)
 {
 	ft_putstr("ls: illegal option -- ");
 	ft_putchar(*arr);
 	ft_putstr("\nusage: ls [-Radfglrtu] [file ...]\n");
+}
+
+void	print_names(t_flags *flags, t_dir *dir, size_t c)
+{
+	t_list	**stack;
+
+	if (flags->a == 0)
+		while (dir->file->d_name[0] == '.')
+		{
+			dir++;
+			c--;
+		}
+	if (flags->l == 0)
+		print_colomns(dir, c);
+	else
+		print_rows(dir, c);
 }
