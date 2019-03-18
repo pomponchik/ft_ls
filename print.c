@@ -6,7 +6,7 @@
 /*   By: sbearded <sbearded@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/04 15:26:24 by sbearded          #+#    #+#             */
-/*   Updated: 2019/03/15 23:19:06 by sbearded         ###   ########.fr       */
+/*   Updated: 2019/03/18 17:07:49 by sbearded         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,15 +122,14 @@ static void	print_permission(mode_t stat)
 
 static void	print_ftype(mode_t stat)
 {
-	//printf("%#07O\n", stat);
 	if (stat & S_IFREG)
 	{
-		if (stat & S_IFLNK)
+		if ((stat & S_IFREG) == S_IFREG)
+			ft_putchar('-');
+		else if (stat & S_IFLNK)
 			ft_putchar('l');
 		else if (stat & S_IFSOCK)
 			ft_putchar('s');
-		else
-			ft_putchar('-');
 	}
 	else
 	{
@@ -145,6 +144,22 @@ static void	print_ftype(mode_t stat)
 	}
 }
 
+static void	print_time(t_dir *dir)
+{
+	char	*str;
+
+	str = ctime(&dir->buffer->st_mtimespec.tv_sec);
+	str[16] = '\0';
+	ft_putstr(str + 4);
+}
+
+static void	print_user(t_dir *dir)
+{
+	ft_putstr(getpwuid(dir->buffer->st_uid)->pw_name);
+	ft_putchar(' ');
+	ft_putstr(getgrgid(dir->buffer->st_gid)->gr_name);
+}
+
 static void	print_rows(t_dir *dir, size_t c)
 {
 	while (c--)
@@ -152,6 +167,12 @@ static void	print_rows(t_dir *dir, size_t c)
 		print_ftype(dir->buffer->st_mode);
 		print_permission(dir->buffer->st_mode);
 		ft_putnbr(dir->buffer->st_nlink);
+		ft_putchar(' ');
+		print_user(dir);
+		ft_putchar(' ');
+		ft_putnbr(dir->buffer->st_size);
+		ft_putchar(' ');
+		print_time(dir);
 		ft_putchar(' ');
 		ft_putstr(dir->file->d_name);
 		ft_putchar('\n');
@@ -186,13 +207,6 @@ static void	print_colomns(t_dir *dir, size_t c)
 	}
 }
 
-void	print_err_illegal_flag(char *arr)
-{
-	ft_putstr("ls: illegal option -- ");
-	ft_putchar(*arr);
-	ft_putstr("\nusage: ls [-Radfglrtu] [file ...]\n");
-}
-
 void	print_names(t_flags *flags, t_dir *dir, size_t c)
 {
 	t_list	**stack;
@@ -207,4 +221,11 @@ void	print_names(t_flags *flags, t_dir *dir, size_t c)
 		print_colomns(dir, c);
 	else
 		print_rows(dir, c);
+}
+
+void	print_err_illegal_flag(char *arr)
+{
+	ft_putstr("ls: illegal option -- ");
+	ft_putchar(*arr);
+	ft_putstr("\nusage: ls [-Radfglrtu] [file ...]\n");
 }

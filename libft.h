@@ -6,7 +6,7 @@
 /*   By: sbearded <sbearded@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/25 21:20:15 by ahalmon-          #+#    #+#             */
-/*   Updated: 2019/03/13 23:51:48 by sbearded         ###   ########.fr       */
+/*   Updated: 2019/03/18 16:50:26 by sbearded         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,10 @@
 # include <sys/stat.h>
 # include <stdio.h>
 # include <sys/ioctl.h>
+# include <time.h>
+# include <pwd.h>
+#include <grp.h>
+#include <uuid/uuid.h>
 
 # define SIZE_TABS 8
 
