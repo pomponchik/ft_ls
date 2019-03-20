@@ -6,7 +6,7 @@
 /*   By: sbearded <sbearded@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/25 21:20:15 by ahalmon-          #+#    #+#             */
-/*   Updated: 2019/03/18 16:50:26 by sbearded         ###   ########.fr       */
+/*   Updated: 2019/03/20 18:03:18 by sbearded         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,11 @@
 # include <sys/ioctl.h>
 # include <time.h>
 # include <pwd.h>
-#include <grp.h>
-#include <uuid/uuid.h>
+# include <grp.h>
+# include <uuid/uuid.h>
+# include <sys/xattr.h>
+# include <sys/acl.h>
+# include <sys/types.h>
 
 # define SIZE_TABS 8
 
@@ -56,6 +59,8 @@ typedef struct			s_dir
 	struct dirent		*file;
 	struct stat			*buffer;
 	unsigned int		count;
+	short int			link;
+	short int			major;
 }						t_dir;
 
 typedef struct			s_list
@@ -84,7 +89,7 @@ typedef struct			s_iterators
 t_flags					*create_flags();
 int						check_flags(char **argv, t_flags *flags);
 
-void					print_names(t_flags *flags, t_dir *dir, size_t c);
+void					print_names(t_flags *flags, t_dir *dir, size_t c, char *path);
 void					print_err_illegal_flag(char *arr);
 
 void					ft_lstdelcontent(void *c, size_t c_size);

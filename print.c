@@ -6,11 +6,30 @@
 /*   By: sbearded <sbearded@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/04 15:26:24 by sbearded          #+#    #+#             */
-/*   Updated: 2019/03/18 17:07:49 by sbearded         ###   ########.fr       */
+/*   Updated: 2019/03/20 18:03:17 by sbearded         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+
+char			*create_path(char *p1, char *p2)
+{
+	int		i;
+	char	*new;
+	char	*tmp;
+
+	i = 0;
+	while (p1[i++]);
+	if (p1[i-1] != '/')
+	{
+		tmp = ft_strjoin(p1, "/");
+		new = ft_strjoin(tmp, p2);
+		free(tmp);
+	}
+	else
+		new = ft_strjoin(p1, p2);
+	return (new);
+}
 
 // Возможно сделать быстрее
 static size_t	search_longest_word_length(t_dir *dir, size_t c)
@@ -117,30 +136,35 @@ static void	print_permission(mode_t stat)
 	}
 	print_SST(stat, arr);
 	ft_putstr(arr);
-	write(1, "  ", 2);
 }
 
-static void	print_ftype(mode_t stat)
+static void	print_ftype(t_dir *dir)
 {
-	if (stat & S_IFREG)
+	int	res;
+
+	res = dir->buffer->st_mode & S_IFMT;
+	if (res == S_IFREG)
+		ft_putchar('-');
+	else if (res == S_IFDIR)
+		ft_putchar('d');
+	else if (res == S_IFLNK)
 	{
-		if ((stat & S_IFREG) == S_IFREG)
-			ft_putchar('-');
-		else if (stat & S_IFLNK)
-			ft_putchar('l');
-		else if (stat & S_IFSOCK)
-			ft_putchar('s');
+		ft_putchar('l');
+		dir->link = 1;
 	}
-	else
+	else if (res == S_IFSOCK)
+		ft_putchar('s');
+	else if (res == S_IFBLK)
 	{
-		if ((stat & S_IFBLK) == S_IFBLK)
-			ft_putchar('b');
-		else if (stat & S_IFDIR)
-			ft_putchar('d');
-		else if (stat & S_IFCHR)
-			ft_putchar('c');
-		else if (stat & S_IFIFO)
-			ft_putchar('p');
+		ft_putchar('b');
+		dir->major = 1;
+	}
+	else if (res == S_IFIFO)
+		ft_putchar('p');
+	else if (res == S_IFCHR)
+	{
+		ft_putchar('c');
+		dir->major = 1;
 	}
 }
 
@@ -160,21 +184,70 @@ static void	print_user(t_dir *dir)
 	ft_putstr(getgrgid(dir->buffer->st_gid)->gr_name);
 }
 
-static void	print_rows(t_dir *dir, size_t c)
+static void	print_attr(t_dir *dir, char *path)
 {
+	ssize_t		check;
+	acl_t		acl;
+
+	check = listxattr(create_path(path, dir->file->d_name), NULL, 0, 0);
+	acl = acl_get_file(create_path(path, dir->file->d_name), ACL_TYPE_EXTENDED);
+	if (check > 0)
+		ft_putchar('@');
+	else if (acl != NULL)
+		ft_putchar('+');
+	else
+		ft_putchar(' ');
+}
+
+static void	print_link(t_dir *dir, char *path)
+{
+	char	*buf;
+	ssize_t	bufsize;
+	ssize_t	lsize;
+
+	if (dir->link == 1)
+	{
+		bufsize = dir->buffer->st_size + 1;
+		buf = (char*)malloc(bufsize);
+		ft_putstr(" -> ");
+		lsize = readlink(create_path(path, dir->file->d_name), buf, bufsize);
+		bufsize = 0;
+		while (bufsize < lsize)
+			write(1, buf + bufsize++, 1);
+		free(buf);
+	}
+}
+
+static void	print_bytes(t_dir *dir)
+{
+	if (dir->major == 0)
+		ft_putnbr(dir->buffer->st_size);
+	else
+	{
+		;
+	}
+}
+
+static void	print_rows(t_dir *dir, size_t c, char *path)
+{
+	dir->link = 0;
+	dir->major = 0;
 	while (c--)
 	{
-		print_ftype(dir->buffer->st_mode);
+		print_ftype(dir);
 		print_permission(dir->buffer->st_mode);
+		print_attr(dir, path);
+		ft_putchar(' ');
 		ft_putnbr(dir->buffer->st_nlink);
 		ft_putchar(' ');
 		print_user(dir);
 		ft_putchar(' ');
-		ft_putnbr(dir->buffer->st_size);
+		print_bytes(dir);
 		ft_putchar(' ');
 		print_time(dir);
 		ft_putchar(' ');
 		ft_putstr(dir->file->d_name);
+		print_link(dir, path);
 		ft_putchar('\n');
 		dir++;
 	}
@@ -192,7 +265,7 @@ static void	print_colomns(t_dir *dir, size_t c)
 	while (y < col.rows)
 	{
 		x = 0;
-		if (y == col.rows - col.empty)
+		if (y == col.rows - col.empty && c != 1)
 			col.col--;
 		while (x < col.col)
 		{
@@ -207,7 +280,7 @@ static void	print_colomns(t_dir *dir, size_t c)
 	}
 }
 
-void	print_names(t_flags *flags, t_dir *dir, size_t c)
+void	print_names(t_flags *flags, t_dir *dir, size_t c, char *path)
 {
 	t_list	**stack;
 
@@ -220,7 +293,7 @@ void	print_names(t_flags *flags, t_dir *dir, size_t c)
 	if (flags->l == 0)
 		print_colomns(dir, c);
 	else
-		print_rows(dir, c);
+		print_rows(dir, c, path);
 }
 
 void	print_err_illegal_flag(char *arr)
